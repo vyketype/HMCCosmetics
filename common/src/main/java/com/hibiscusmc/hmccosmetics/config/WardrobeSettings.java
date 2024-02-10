@@ -1,6 +1,6 @@
 package com.hibiscusmc.hmccosmetics.config;
 
-import com.hibiscusmc.hmccosmetics.HMCCosmeticsPlugin;
+import com.hibiscusmc.hmccosmetics.SummitCosmeticsPlugin;
 import com.hibiscusmc.hmccosmetics.util.MessagesUtil;
 import com.hibiscusmc.hmccosmetics.util.misc.Utils;
 import lombok.Getter;
@@ -211,7 +211,7 @@ public class WardrobeSettings {
     public static void setNPCLocation(Wardrobe wardrobe, Location newLocation) {
         wardrobe.getLocation().setNpcLocation(newLocation);
 
-        HMCCosmeticsPlugin plugin = HMCCosmeticsPlugin.getInstance();
+        SummitCosmeticsPlugin plugin = SummitCosmeticsPlugin.getInstance();
 
         plugin.getConfig().set("wardrobe.wardrobes." + wardrobe.getId() + ".npc-location." + "world", newLocation.getWorld().getName());
         plugin.getConfig().set("wardrobe.wardrobes." + wardrobe.getId() + ".npc-location." + "x", newLocation.getX());
@@ -230,7 +230,7 @@ public class WardrobeSettings {
     public static void setViewerLocation(Wardrobe wardrobe, Location newLocation) {
         wardrobe.getLocation().setViewerLocation(newLocation);
 
-        HMCCosmeticsPlugin plugin = HMCCosmeticsPlugin.getInstance();
+        SummitCosmeticsPlugin plugin = SummitCosmeticsPlugin.getInstance();
 
         plugin.getConfig().set("wardrobe.wardrobes." + wardrobe.getId() + ".viewer-location.world", newLocation.getWorld().getName());
         plugin.getConfig().set("wardrobe.wardrobes." + wardrobe.getId() + ".viewer-location.x", newLocation.getX());
@@ -249,7 +249,7 @@ public class WardrobeSettings {
     public static void setLeaveLocation(Wardrobe wardrobe, Location newLocation) {
         wardrobe.getLocation().setLeaveLocation(newLocation);
 
-        HMCCosmeticsPlugin plugin = HMCCosmeticsPlugin.getInstance();
+        SummitCosmeticsPlugin plugin = SummitCosmeticsPlugin.getInstance();
 
         plugin.getConfig().set("wardrobe.wardrobes." + wardrobe.getId() + ".leave-location.world", newLocation.getWorld().getName());
         plugin.getConfig().set("wardrobe.wardrobes." + wardrobe.getId() + ".leave-location.x", newLocation.getX());
@@ -264,7 +264,7 @@ public class WardrobeSettings {
     public static void setWardrobePermission(Wardrobe wardrobe, String permission) {
         wardrobe.setPermission(permission);
 
-        HMCCosmeticsPlugin plugin = HMCCosmeticsPlugin.getInstance();
+        SummitCosmeticsPlugin plugin = SummitCosmeticsPlugin.getInstance();
 
         plugin.getConfig().set("wardrobe.wardrobes." + wardrobe.getId() + ".permission", permission);
 
@@ -274,7 +274,7 @@ public class WardrobeSettings {
     public static void setWardrobeDistance(Wardrobe wardrobe, int distance) {
         wardrobe.setDistance(distance);
 
-        HMCCosmeticsPlugin plugin = HMCCosmeticsPlugin.getInstance();
+        SummitCosmeticsPlugin plugin = SummitCosmeticsPlugin.getInstance();
 
         plugin.getConfig().set("wardrobe.wardrobes." + wardrobe.getId() + ".distance", distance);
 

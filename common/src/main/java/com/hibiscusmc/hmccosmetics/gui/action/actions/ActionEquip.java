@@ -16,6 +16,6 @@ public class ActionEquip extends Action {
         Cosmetic cosmetic = Cosmetics.getCosmetic(raw);
         if (cosmetic == null) return;
 
-        user.addPlayerCosmetic(cosmetic);
+        user.equipCosmetic(cosmetic);
     }
 }

@@ -1,6 +1,6 @@
 package com.hibiscusmc.hmccosmetics.util;
 
-import com.hibiscusmc.hmccosmetics.HMCCosmeticsPlugin;
+import com.hibiscusmc.hmccosmetics.SummitCosmeticsPlugin;
 import com.hibiscusmc.hmccosmetics.config.Settings;
 import com.hibiscusmc.hmccosmetics.user.CosmeticUser;
 import me.lojosho.hibiscuscommons.hooks.Hooks;
@@ -22,7 +22,7 @@ import java.util.logging.Level;
 
 public class MessagesUtil {
 
-    private static String prefix;
+    public static String prefix;
     private static final HashMap<String, String> MESSAGES = new HashMap<>();
 
     public static void setup(@NotNull ConfigurationNode config) {
@@ -43,7 +43,7 @@ public class MessagesUtil {
     public static void sendMessage(Player player, String key) {
         Component finalMessage = processString(player, key);
         if (finalMessage == null) return;
-        Audience target = BukkitAudiences.create(HMCCosmeticsPlugin.getInstance()).player(player);
+        Audience target = BukkitAudiences.create(SummitCosmeticsPlugin.getInstance()).player(player);
 
         target.sendMessage(finalMessage);
     }
@@ -51,7 +51,7 @@ public class MessagesUtil {
     public static void sendMessage(CommandSender sender, String key) {
         Component finalMessage = processString(null, key);
         if (finalMessage == null) return;
-        Audience target = BukkitAudiences.create(HMCCosmeticsPlugin.getInstance()).sender(sender);
+        Audience target = BukkitAudiences.create(SummitCosmeticsPlugin.getInstance()).sender(sender);
 
         target.sendMessage(finalMessage);
     }
@@ -59,7 +59,7 @@ public class MessagesUtil {
     public static void sendMessage(Player player, String key, TagResolver placeholder) {
         Component finalMessage = processString(player, key, placeholder);
         if (finalMessage == null) return;
-        Audience target = BukkitAudiences.create(HMCCosmeticsPlugin.getInstance()).player(player);
+        Audience target = BukkitAudiences.create(SummitCosmeticsPlugin.getInstance()).player(player);
 
         target.sendMessage(finalMessage);
     }
@@ -67,7 +67,7 @@ public class MessagesUtil {
     public static void sendMessageNoKey(Player player, String message) {
         Component finalMessage = processStringNoKey(player, message);
         if (finalMessage == null) return;
-        Audience target = BukkitAudiences.create(HMCCosmeticsPlugin.getInstance()).player(player);
+        Audience target = BukkitAudiences.create(SummitCosmeticsPlugin.getInstance()).player(player);
 
         target.sendMessage(finalMessage);
     }
@@ -75,7 +75,7 @@ public class MessagesUtil {
     public static void sendActionBar(Player player, String key) {
         Component finalMessage = processString(player, key);
         if (finalMessage == null) return;
-        Audience target = BukkitAudiences.create(HMCCosmeticsPlugin.getInstance()).player(player);
+        Audience target = BukkitAudiences.create(SummitCosmeticsPlugin.getInstance()).player(player);
 
         target.sendActionBar(finalMessage);
     }
@@ -85,7 +85,7 @@ public class MessagesUtil {
     }
 
     public static void sendTitle(Player player, String message, int fadein, int stay, int fadeout) {
-        Audience target = BukkitAudiences.create(HMCCosmeticsPlugin.getInstance()).player(player);
+        Audience target = BukkitAudiences.create(SummitCosmeticsPlugin.getInstance()).player(player);
 
         Title.Times times = Title.Times.times(Duration.ofMillis(fadein), Duration.ofMillis(stay), Duration.ofMillis(fadeout));
         Title title = Title.title(processStringNoKey(player, message), Component.empty(), times);
@@ -142,6 +142,6 @@ public class MessagesUtil {
 
     public static void sendDebugMessages(String message, Level level) {
         if (!Settings.isDebugMode() && level == Level.INFO) return;
-        HMCCosmeticsPlugin.getInstance().getLogger().log(level, message);
+        SummitCosmeticsPlugin.getInstance().getLogger().log(level, message);
     }
 }

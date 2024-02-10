@@ -2,12 +2,13 @@ package com.hibiscusmc.hmccosmetics.user;
 
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
-import com.hibiscusmc.hmccosmetics.HMCCosmeticsPlugin;
+import com.hibiscusmc.hmccosmetics.SummitCosmeticsPlugin;
 import com.hibiscusmc.hmccosmetics.api.events.*;
 import com.hibiscusmc.hmccosmetics.config.Settings;
 import com.hibiscusmc.hmccosmetics.config.Wardrobe;
 import com.hibiscusmc.hmccosmetics.config.WardrobeSettings;
 import com.hibiscusmc.hmccosmetics.cosmetic.Cosmetic;
+import com.hibiscusmc.hmccosmetics.cosmetic.CosmeticData;
 import com.hibiscusmc.hmccosmetics.cosmetic.CosmeticSlot;
 import com.hibiscusmc.hmccosmetics.cosmetic.types.CosmeticArmorType;
 import com.hibiscusmc.hmccosmetics.cosmetic.types.CosmeticBackpackType;
@@ -18,10 +19,11 @@ import com.hibiscusmc.hmccosmetics.user.manager.UserBalloonManager;
 import com.hibiscusmc.hmccosmetics.user.manager.UserEmoteManager;
 import com.hibiscusmc.hmccosmetics.user.manager.UserWardrobeManager;
 import com.hibiscusmc.hmccosmetics.util.HMCCInventoryUtils;
-import com.hibiscusmc.hmccosmetics.util.MessagesUtil;
 import com.hibiscusmc.hmccosmetics.util.HMCCPlayerUtils;
+import com.hibiscusmc.hmccosmetics.util.MessagesUtil;
 import com.hibiscusmc.hmccosmetics.util.packets.HMCCPacketManager;
 import lombok.Getter;
+import lombok.Setter;
 import me.lojosho.hibiscuscommons.hooks.Hooks;
 import me.lojosho.hibiscuscommons.util.InventoryUtils;
 import me.lojosho.hibiscuscommons.util.packets.PacketManager;
@@ -40,19 +42,26 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.logging.Level;
 
+@Setter
 public class CosmeticUser {
-
     @Getter
     private final UUID uniqueId;
     private int taskId;
-    private final HashMap<CosmeticSlot, Cosmetic> playerCosmetics = new HashMap<>();
+    
+    // cosmetics that user has equipped for each slot
+    private final HashMap<CosmeticSlot, Cosmetic> equippedCosmetics = new HashMap<>();
+    
     private UserWardrobeManager userWardrobeManager;
     private UserBalloonManager userBalloonManager;
     @Getter
     private UserBackpackManager userBackpackManager;
     @Getter
     private final UserEmoteManager userEmoteManager;
-
+    
+    // cosmetics that user possesses
+    @Getter @Setter
+    private HashMap<CosmeticData, Cosmetic> cosmeticsMap = new HashMap<>();
+    
     // Cosmetic Settings/Toggles
     private boolean hideCosmetics;
     @Getter
@@ -70,12 +79,12 @@ public class CosmeticUser {
         Runnable run = () -> {
             MessagesUtil.sendDebugMessages("Tick[uuid=" + uniqueId + "]", Level.INFO);
             updateCosmetic();
-            if (isHidden() && !getUserEmoteManager().isPlayingEmote()) MessagesUtil.sendActionBar(getPlayer(), "hidden-cosmetics");
+            if (getHidden() && !getUserEmoteManager().isPlayingEmote()) MessagesUtil.sendActionBar(getPlayer(), "hidden-cosmetics");
         };
 
         int tickPeriod = Settings.getTickPeriod();
         if (tickPeriod > 0) {
-            BukkitTask task = Bukkit.getScheduler().runTaskTimer(HMCCosmeticsPlugin.getInstance(), run, 0, tickPeriod);
+            BukkitTask task = Bukkit.getScheduler().runTaskTimer(SummitCosmeticsPlugin.getInstance(), run, 0, tickPeriod);
             taskId = task.getTaskId();
         }
     }
@@ -87,18 +96,26 @@ public class CosmeticUser {
     }
 
     public Cosmetic getCosmetic(CosmeticSlot slot) {
-        return playerCosmetics.get(slot);
+        return equippedCosmetics.get(slot);
     }
 
     public ImmutableCollection<Cosmetic> getCosmetics() {
-        return ImmutableList.copyOf(playerCosmetics.values());
+        return ImmutableList.copyOf(equippedCosmetics.values());
     }
 
-    public void addPlayerCosmetic(Cosmetic cosmetic) {
-        addPlayerCosmetic(cosmetic, null);
+    public void addCosmetic(Cosmetic cosmetic, CosmeticData data) {
+        cosmeticsMap.put(data, cosmetic);
+    }
+    
+    public void removeCosmetic(CosmeticData data) {
+        cosmeticsMap.remove(data);
+    }
+    
+    public void equipCosmetic(Cosmetic cosmetic) {
+        equipCosmetic(cosmetic, null);
     }
 
-    public void addPlayerCosmetic(Cosmetic cosmetic, Color color) {
+    public void equipCosmetic(Cosmetic cosmetic, Color color) {
         // API
         PlayerCosmeticEquipEvent event = new PlayerCosmeticEquipEvent(this, cosmetic);
         Bukkit.getPluginManager().callEvent(event);
@@ -107,23 +124,21 @@ public class CosmeticUser {
         }
         cosmetic = event.getCosmetic();
         // Internal
-        if (playerCosmetics.containsKey(cosmetic.getSlot())) {
+        if (equippedCosmetics.containsKey(cosmetic.getSlot())) {
             removeCosmeticSlot(cosmetic.getSlot());
         }
 
-        playerCosmetics.put(cosmetic.getSlot(), cosmetic);
+        equippedCosmetics.put(cosmetic.getSlot(), cosmetic);
         if (color != null) colors.put(cosmetic.getSlot(), color);
-        MessagesUtil.sendDebugMessages("addPlayerCosmetic[id=" + cosmetic.getId() + "]");
-        if (!isHidden()) {
-            if (cosmetic.getSlot() == CosmeticSlot.BACKPACK) {
-                CosmeticBackpackType backpackType = (CosmeticBackpackType) cosmetic;
-                spawnBackpack(backpackType);
-                MessagesUtil.sendDebugMessages("addPlayerCosmetic[spawnBackpack,id=" + cosmetic.getId() + "]");
-            }
-            if (cosmetic.getSlot() == CosmeticSlot.BALLOON) {
-                CosmeticBalloonType balloonType = (CosmeticBalloonType) cosmetic;
-                spawnBalloon(balloonType);
-            }
+        MessagesUtil.sendDebugMessages("equipCosmetic[id=" + cosmetic.getId() + "]");
+        if (cosmetic.getSlot() == CosmeticSlot.BACKPACK) {
+            CosmeticBackpackType backpackType = (CosmeticBackpackType) cosmetic;
+            spawnBackpack(backpackType);
+            MessagesUtil.sendDebugMessages("equipCosmetic[spawnBackpack,id=" + cosmetic.getId() + "]");
+        }
+        if (cosmetic.getSlot() == CosmeticSlot.BALLOON) {
+            CosmeticBalloonType balloonType = (CosmeticBalloonType) cosmetic;
+            spawnBalloon(balloonType);
         }
         // API
         PlayerCosmeticPostEquipEvent postEquipEvent = new PlayerCosmeticPostEquipEvent(this, cosmetic);
@@ -156,7 +171,7 @@ public class CosmeticUser {
             if (getUserEmoteManager().isPlayingEmote()) getUserEmoteManager().stopEmote(UserEmoteManager.StopEmoteReason.UNEQUIP);
         }
         colors.remove(slot);
-        playerCosmetics.remove(slot);
+        equippedCosmetics.remove(slot);
         removeArmor(slot);
     }
 
@@ -166,7 +181,7 @@ public class CosmeticUser {
     }
 
     public boolean hasCosmeticInSlot(CosmeticSlot slot) {
-        return playerCosmetics.containsKey(slot);
+        return equippedCosmetics.containsKey(slot);
     }
 
     public boolean hasCosmeticInSlot(Cosmetic cosmetic) {
@@ -175,7 +190,7 @@ public class CosmeticUser {
     }
 
     public Set<CosmeticSlot> getSlotsWithCosmetics() {
-        return Set.copyOf(playerCosmetics.keySet());
+        return Set.copyOf(equippedCosmetics.keySet());
     }
 
     public void updateCosmetic(CosmeticSlot slot) {
@@ -358,7 +373,7 @@ public class CosmeticUser {
                     WardrobeSettings.getTransitionStay(),
                     WardrobeSettings.getTransitionFadeOut()
             );
-            Bukkit.getScheduler().runTaskLater(HMCCosmeticsPlugin.getInstance(), () -> {
+            Bukkit.getScheduler().runTaskLater(SummitCosmeticsPlugin.getInstance(), () -> {
                 userWardrobeManager.end();
                 userWardrobeManager = null;
             }, WardrobeSettings.getTransitionDelay());
@@ -493,8 +508,8 @@ public class CosmeticUser {
         Player player = getPlayer();
         if (player == null) return;
         for (final Player p : Bukkit.getOnlinePlayers()) {
-            p.hidePlayer(HMCCosmeticsPlugin.getInstance(), player);
-            player.hidePlayer(HMCCosmeticsPlugin.getInstance(), p);
+            p.hidePlayer(SummitCosmeticsPlugin.getInstance(), player);
+            player.hidePlayer(SummitCosmeticsPlugin.getInstance(), p);
         }
     }
 
@@ -502,8 +517,8 @@ public class CosmeticUser {
         Player player = getPlayer();
         if (player == null) return;
         for (final Player p : Bukkit.getOnlinePlayers()) {
-            p.showPlayer(HMCCosmeticsPlugin.getInstance(), player);
-            player.showPlayer(HMCCosmeticsPlugin.getInstance(), p);
+            p.showPlayer(SummitCosmeticsPlugin.getInstance(), player);
+            player.showPlayer(SummitCosmeticsPlugin.getInstance(), p);
         }
     }
 
@@ -557,17 +572,7 @@ public class CosmeticUser {
         MessagesUtil.sendDebugMessages("ShowCosmetics");
     }
 
-
-    /**
-     * This method is deprecated and will be removed in the future. Use {@link #isHidden()} instead.
-     * @return
-     */
-    @Deprecated(since = "2.7.2-DEV", forRemoval = true)
     public boolean getHidden() {
-        return this.hideCosmetics;
-    }
-
-    public boolean isHidden() {
         return this.hideCosmetics;
     }
 

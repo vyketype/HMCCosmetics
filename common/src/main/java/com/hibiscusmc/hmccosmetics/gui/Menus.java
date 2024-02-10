@@ -1,6 +1,6 @@
 package com.hibiscusmc.hmccosmetics.gui;
 
-import com.hibiscusmc.hmccosmetics.HMCCosmeticsPlugin;
+import com.hibiscusmc.hmccosmetics.SummitCosmeticsPlugin;
 import com.hibiscusmc.hmccosmetics.config.Settings;
 import com.hibiscusmc.hmccosmetics.util.MessagesUtil;
 import me.lojosho.shaded.configurate.CommentedConfigurationNode;
@@ -66,7 +66,7 @@ public class Menus {
     public static void setup() {
         MENUS.clear();
 
-        File cosmeticFolder = new File(HMCCosmeticsPlugin.getInstance().getDataFolder() + "/menus");
+        File cosmeticFolder = new File(SummitCosmeticsPlugin.getInstance().getDataFolder() + "/menus");
         if (!cosmeticFolder.exists()) cosmeticFolder.mkdir();
 
         // Recursive file lookup

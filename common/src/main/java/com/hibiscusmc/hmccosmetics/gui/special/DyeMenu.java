@@ -3,7 +3,7 @@ package com.hibiscusmc.hmccosmetics.gui.special;
 import com.hibiscusmc.hmccolor.HMCColorApi;
 import com.hibiscusmc.hmccolor.shaded.gui.guis.Gui;
 import com.hibiscusmc.hmccolor.shaded.gui.guis.GuiItem;
-import com.hibiscusmc.hmccosmetics.HMCCosmeticsPlugin;
+import com.hibiscusmc.hmccosmetics.SummitCosmeticsPlugin;
 import com.hibiscusmc.hmccosmetics.config.Settings;
 import com.hibiscusmc.hmccosmetics.cosmetic.Cosmetic;
 import com.hibiscusmc.hmccosmetics.user.CosmeticUser;
@@ -58,9 +58,9 @@ public class DyeMenu {
 
     private static void addCosmetic(@NotNull CosmeticUser user, Cosmetic cosmetic, Color color) {
         Player player = user.getPlayer();
-        user.addPlayerCosmetic(cosmetic, color);
+        user.equipCosmetic(cosmetic, color);
         player.setItemOnCursor(new ItemStack(Material.AIR));
-        Bukkit.getScheduler().runTaskLater(HMCCosmeticsPlugin.getInstance(), () -> {
+        Bukkit.getScheduler().runTaskLater(SummitCosmeticsPlugin.getInstance(), () -> {
             player.closeInventory();
             user.updateCosmetic(cosmetic.getSlot());
         }, 2);

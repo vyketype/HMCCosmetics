@@ -2,8 +2,8 @@ package com.hibiscusmc.hmccosmetics.gui.action.actions;
 
 import com.hibiscusmc.hmccosmetics.gui.action.Action;
 import com.hibiscusmc.hmccosmetics.user.CosmeticUser;
-import com.hibiscusmc.hmccosmetics.util.MessagesUtil;
 import com.hibiscusmc.hmccosmetics.util.HMCCServerUtils;
+import com.hibiscusmc.hmccosmetics.util.MessagesUtil;
 import com.hibiscusmc.hmccosmetics.util.packets.HMCCPacketManager;
 import com.owen1212055.particlehelper.api.particle.types.BlockDataParticle;
 import com.owen1212055.particlehelper.api.particle.types.DestinationParticle;

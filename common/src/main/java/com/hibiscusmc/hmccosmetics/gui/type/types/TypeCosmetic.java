@@ -1,6 +1,6 @@
 package com.hibiscusmc.hmccosmetics.gui.type.types;
 
-import com.hibiscusmc.hmccosmetics.HMCCosmeticsPlugin;
+import com.hibiscusmc.hmccosmetics.SummitCosmeticsPlugin;
 import com.hibiscusmc.hmccosmetics.config.Settings;
 import com.hibiscusmc.hmccosmetics.cosmetic.Cosmetic;
 import com.hibiscusmc.hmccosmetics.cosmetic.Cosmetics;
@@ -107,7 +107,7 @@ public class TypeCosmetic extends Type {
                 if (cosmetic.isDyable() && Hooks.isActiveHook("HMCColor")) {
                     DyeMenu.openMenu(user, cosmetic);
                 } else {
-                    user.addPlayerCosmetic(cosmetic);
+                    user.equipCosmetic(cosmetic);
                 }
             }
 
@@ -120,7 +120,7 @@ public class TypeCosmetic extends Type {
         Runnable run = () -> user.updateCosmetic(cosmetic.getSlot());
         if (cosmetic instanceof CosmeticArmorType) {
             if (((CosmeticArmorType) cosmetic).getEquipSlot().equals(EquipmentSlot.OFF_HAND)) {
-                Bukkit.getScheduler().runTaskLater(HMCCosmeticsPlugin.getInstance(), run, 1);
+                Bukkit.getScheduler().runTaskLater(SummitCosmeticsPlugin.getInstance(), run, 1);
             }
         }
         run.run();

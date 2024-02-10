@@ -1,6 +1,6 @@
 package com.hibiscusmc.hmccosmetics.user.manager;
 
-import com.hibiscusmc.hmccosmetics.HMCCosmeticsPlugin;
+import com.hibiscusmc.hmccosmetics.SummitCosmeticsPlugin;
 import com.hibiscusmc.hmccosmetics.config.Settings;
 import com.hibiscusmc.hmccosmetics.cosmetic.types.CosmeticBalloonType;
 import com.hibiscusmc.hmccosmetics.user.CosmeticUser;
@@ -48,7 +48,7 @@ public class UserBalloonManager {
             e.setSmall(true);
             e.setMarker(true);
             e.setPersistent(false);
-            e.getPersistentDataContainer().set(new NamespacedKey(HMCCosmeticsPlugin.getInstance(), "cosmeticMob"), PersistentDataType.SHORT, Short.valueOf("1"));
+            e.getPersistentDataContainer().set(new NamespacedKey(SummitCosmeticsPlugin.getInstance(), "cosmeticMob"), PersistentDataType.SHORT, Short.valueOf("1"));
         });
     }
 
@@ -205,7 +205,7 @@ public class UserBalloonManager {
         CosmeticUser viewer = CosmeticUsers.getUser(player.getUniqueId());
 
         if (user.getPlayer() == player) {
-            return (!user.isHidden());
+            return (!user.getHidden());
         } else {
             if (user.isInWardrobe()) return false;
             MessagesUtil.sendDebugMessages("playerCheck - Not Same Player");
@@ -214,6 +214,6 @@ public class UserBalloonManager {
                 return false;
             }
         }
-        return (!user.isHidden());
+        return (!user.getHidden());
     }
 }

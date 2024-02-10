@@ -7,11 +7,14 @@ import lombok.Setter;
 import me.lojosho.hibiscuscommons.config.serializer.ItemSerializer;
 import me.lojosho.shaded.configurate.ConfigurationNode;
 import me.lojosho.shaded.configurate.serialize.SerializationException;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.logging.Level;
 
 public abstract class Cosmetic {
@@ -27,6 +30,13 @@ public abstract class Cosmetic {
     private CosmeticSlot slot;
     @Getter @Setter
     private boolean dyable;
+
+    @Getter @Setter
+    private int stars;
+    @Getter @Setter
+    private Rarity rarity;
+    @Getter @Setter
+    private int amountMinted;
 
     protected Cosmetic(String id, @NotNull ConfigurationNode config) {
         this.id = id;
@@ -46,9 +56,17 @@ public abstract class Cosmetic {
 
         setSlot(CosmeticSlot.valueOf(config.node("slot").getString()));
         setDyable(config.node("dyeable").getBoolean(false));
+        setRarity(Rarity.valueOf(config.node("rarity").getString("COMMON").toUpperCase()));
+        setAmountMinted(config.node("amountMinted").getInt(-1));
+        setStars(config.node("stars").getInt(0));
 
         MessagesUtil.sendDebugMessages("Dyeable " + dyable);
         Cosmetics.addCosmetic(this);
+    }
+    
+    public String getName() {
+        final Component itemNameComponent = item.displayName();
+        return LegacyComponentSerializer.legacySection().serialize(itemNameComponent);
     }
 
     public boolean requiresPermission() {

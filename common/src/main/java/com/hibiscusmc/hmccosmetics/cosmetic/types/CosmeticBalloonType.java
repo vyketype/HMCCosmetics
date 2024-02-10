@@ -84,11 +84,11 @@ public class CosmeticBalloonType extends Cosmetic {
 
         HMCCPacketManager.sendTeleportPacket(userBalloonManager.getPufferfishBalloonId(), newLocation, false, viewer);
         HMCCPacketManager.sendLeashPacket(userBalloonManager.getPufferfishBalloonId(), entity.getEntityId(), viewer);
-        if (user.isHidden()) {
+        if (user.getHidden()) {
             userBalloonManager.getPufferfish().hidePufferfish();
             return;
         }
-        if (!user.isHidden() && showLead) {
+        if (!user.getHidden() && showLead) {
             List<Player> sendTo = userBalloonManager.getPufferfish().refreshViewers(newLocation);
             if (sendTo.isEmpty()) return;
             user.getBalloonManager().getPufferfish().spawnPufferfish(newLocation, sendTo);

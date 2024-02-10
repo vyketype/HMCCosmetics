@@ -12,7 +12,7 @@ public class ActionCosmeticShow extends Action {
 
     @Override
     public void run(@NotNull CosmeticUser user, String raw) {
-        if (!user.isHidden()) return;
+        if (!user.getHidden()) return;
 
         // Do not hide if it's already off for WG
         if (user.getHiddenReason() != CosmeticUser.HiddenReason.ACTION && user.getHiddenReason() != CosmeticUser.HiddenReason.COMMAND) return;

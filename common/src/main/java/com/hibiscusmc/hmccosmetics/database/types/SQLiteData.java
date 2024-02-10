@@ -1,6 +1,6 @@
 package com.hibiscusmc.hmccosmetics.database.types;
 
-import com.hibiscusmc.hmccosmetics.HMCCosmeticsPlugin;
+import com.hibiscusmc.hmccosmetics.SummitCosmeticsPlugin;
 import com.hibiscusmc.hmccosmetics.util.MessagesUtil;
 import org.bukkit.Bukkit;
 
@@ -19,7 +19,7 @@ public class SQLiteData extends SQLData {
 
     @Override
     public void setup() {
-        File dataFolder = new File(HMCCosmeticsPlugin.getInstance().getDataFolder(), "database.db");
+        File dataFolder = new File(SummitCosmeticsPlugin.getInstance().getDataFolder(), "database.db");
         boolean exists = dataFolder.exists();
 
         if (!exists) {
@@ -47,7 +47,7 @@ public class SQLiteData extends SQLData {
     @Override
     @SuppressWarnings("resource")
     public void clear(UUID uniqueId) {
-        Bukkit.getScheduler().runTaskAsynchronously(HMCCosmeticsPlugin.getInstance(), () -> {
+        Bukkit.getScheduler().runTaskAsynchronously(SummitCosmeticsPlugin.getInstance(), () -> {
             try {
                 PreparedStatement preparedSt = preparedStatement("DELETE FROM COSMETICDATABASE WHERE UUID=?;");
                 preparedSt.setString(1, uniqueId.toString());
@@ -59,7 +59,7 @@ public class SQLiteData extends SQLData {
     }
 
     private void openConnection() throws SQLException {
-        // Bukkit.getScheduler().runTaskAsynchronously(HMCCosmeticsPlugin.getInstance(), () -> {
+        // Bukkit.getScheduler().runTaskAsynchronously(SummitCosmeticsPlugin.getInstance(), () -> {
         // ...
         // });
         // connection = DriverManager.getConnection("jdbc:mysql://" + DatabaseSettings.getHost() + ":" + DatabaseSettings.getPort() + "/" + DatabaseSettings.getDatabase(), setupProperties());
@@ -67,7 +67,7 @@ public class SQLiteData extends SQLData {
         if (connection != null && !connection.isClosed()) return;
 
         // Close Connection if still active
-        File dataFolder = new File(HMCCosmeticsPlugin.getInstance().getDataFolder(), "database.db");
+        File dataFolder = new File(SummitCosmeticsPlugin.getInstance().getDataFolder(), "database.db");
 
         // Connect to database host
         try {

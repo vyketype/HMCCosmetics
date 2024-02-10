@@ -1,8 +1,9 @@
 package com.hibiscusmc.hmccosmetics.database.types;
 
-import com.hibiscusmc.hmccosmetics.HMCCosmeticsPlugin;
+import com.hibiscusmc.hmccosmetics.SummitCosmeticsPlugin;
 import com.hibiscusmc.hmccosmetics.config.Settings;
 import com.hibiscusmc.hmccosmetics.cosmetic.Cosmetic;
+import com.hibiscusmc.hmccosmetics.cosmetic.CosmeticData;
 import com.hibiscusmc.hmccosmetics.cosmetic.CosmeticSlot;
 import com.hibiscusmc.hmccosmetics.cosmetic.Cosmetics;
 import com.hibiscusmc.hmccosmetics.user.CosmeticUser;
@@ -27,14 +28,34 @@ public abstract class Data {
     public abstract CosmeticUser get(UUID uniqueId);
 
     public abstract void clear(UUID uniqueId);
+    
+    @NotNull
+    public final String serializeCosmeticsMap(@NotNull CosmeticUser user) {
+        StringBuilder data = new StringBuilder();
+        HashMap<CosmeticData, Cosmetic> map = user.getCosmeticsMap();
+        for (Map.Entry<CosmeticData, Cosmetic> entry : map.entrySet()) {
+            CosmeticData dat = entry.getKey();
+            Cosmetic cos = entry.getValue();
+            String input = cos.getId() + "(" + dat.getUniqueCosmeticId() + "-" +
+                    dat.getObtainedTimestamp() + "-" + dat.getMintNumber() + "-" +
+                    dat.getMessagesChatted() + "-" + dat.getTimeWorn() + ")";
+            if (data.isEmpty()) {
+                data.append(input);
+                continue;
+            }
+            data.append("_").append(input);
+        }
+        return data.toString();
+    }
 
     // BACKPACK=colorfulbackpack&RRGGBB,HELMET=niftyhat,BALLOON=colorfulballoon,CHESTPLATE=niftychestplate
     @NotNull
     public final String serializeData(@NotNull CosmeticUser user) {
         StringBuilder data = new StringBuilder();
-        if (user.isHidden()) {
+        data.append("MAP=").append(serializeCosmeticsMap(user));
+        if (user.getHidden()) {
             if (shouldHiddenSave(user.getHiddenReason())) {
-                data.append("HIDDEN=").append(user.getHiddenReason());
+                data.append(",HIDDEN=").append(user.getHiddenReason());
             }
         }
         for (Cosmetic cosmetic : user.getCosmetics()) {
@@ -48,6 +69,22 @@ public abstract class Data {
             data.append(",").append(input);
         }
         return data.toString();
+    }
+    
+    public final HashMap<CosmeticData, Cosmetic> deserializeMap(@NotNull String raw) {
+        HashMap<CosmeticData, Cosmetic> map = new HashMap<>();
+        String rawData = raw.substring(4);
+        String[] entries = rawData.split("_");
+        for (String entry : entries) {
+            String cosmeticId = entry.substring(0, entry.indexOf("("));
+            Cosmetic cosmetic = Cosmetics.getCosmetic(cosmeticId);
+            String[] values = entry.substring(0, entry.length() - 1).split("-");
+            CosmeticData data = new CosmeticData(values[0],
+                    Long.parseLong(values[1]), Integer.parseInt(values[2]),
+                    Integer.parseInt(values[3]), Integer.parseInt(values[4])/*, todo attributes*/);
+            map.put(data, cosmetic);
+        }
+        return map;
     }
 
     public final Map<CosmeticSlot, Map<Cosmetic, Color>> deserializeData(CosmeticUser user, @NotNull String raw) {
@@ -70,6 +107,9 @@ public abstract class Data {
                 if (EnumUtils.isValidEnum(CosmeticUser.HiddenReason.class, splitData[1])) {
                     if (Settings.isForceShowOnJoin()) continue;
                     hiddenReason = CosmeticUser.HiddenReason.valueOf(splitData[1]);
+                    Bukkit.getScheduler().runTask(SummitCosmeticsPlugin.getInstance(), () -> {
+                        user.hideCosmetics(CosmeticUser.HiddenReason.valueOf(splitData[1]));
+                    });
                 }
                 continue;
             }
@@ -103,7 +143,7 @@ public abstract class Data {
         if (hiddenReason != null) {
             user.hideCosmetics(hiddenReason);
         } else {
-            Bukkit.getScheduler().runTask(HMCCosmeticsPlugin.getInstance(), () -> {
+            Bukkit.getScheduler().runTask(SummitCosmeticsPlugin.getInstance(), () -> {
                 // Handle gamemode check
                 if (user.getPlayer() != null && Settings.getDisabledGamemodes().contains(user.getPlayer().getGameMode().toString())) {
                     MessagesUtil.sendDebugMessages("Hiding Cosmetics due to gamemode");

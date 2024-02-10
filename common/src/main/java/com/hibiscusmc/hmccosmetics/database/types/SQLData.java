@@ -1,7 +1,8 @@
 package com.hibiscusmc.hmccosmetics.database.types;
 
-import com.hibiscusmc.hmccosmetics.HMCCosmeticsPlugin;
+import com.hibiscusmc.hmccosmetics.SummitCosmeticsPlugin;
 import com.hibiscusmc.hmccosmetics.cosmetic.Cosmetic;
+import com.hibiscusmc.hmccosmetics.cosmetic.CosmeticData;
 import com.hibiscusmc.hmccosmetics.cosmetic.CosmeticSlot;
 import com.hibiscusmc.hmccosmetics.user.CosmeticUser;
 import org.bukkit.Bukkit;
@@ -10,6 +11,7 @@ import org.bukkit.Color;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -19,19 +21,26 @@ public abstract class SQLData extends Data {
     public CosmeticUser get(UUID uniqueId) {
         CosmeticUser user = new CosmeticUser(uniqueId);
 
-        Bukkit.getScheduler().runTaskAsynchronously(HMCCosmeticsPlugin.getInstance(), () -> {
+        Bukkit.getScheduler().runTaskAsynchronously(SummitCosmeticsPlugin.getInstance(), () -> {
             try {
                 PreparedStatement preparedStatement = preparedStatement("SELECT * FROM COSMETICDATABASE WHERE UUID = ?;");
                 preparedStatement.setString(1, uniqueId.toString());
                 ResultSet rs = preparedStatement.executeQuery();
                 if (rs.next()) {
                     String rawData = rs.getString("COSMETICS");
-                    Map<CosmeticSlot, Map<Cosmetic, Color>> cosmetics = deserializeData(user, rawData);
-                    for (Map<Cosmetic, Color> cosmeticColors : cosmetics.values()) {
+                    
+                    String[] array = rawData.split(",");
+                    HashMap<CosmeticData, Cosmetic> cosmeticsMap = deserializeMap(array[0]);
+                    user.setCosmeticsMap(cosmeticsMap);
+                    
+                    String s1 = rawData.substring(rawData.indexOf(",") + 1);
+                    Map<CosmeticSlot, Map<Cosmetic, Color>> equippedCosmetics = deserializeData(user, s1);
+                    
+                    for (Map<Cosmetic, Color> cosmeticColors : equippedCosmetics.values()) {
                         for (Cosmetic cosmetic : cosmeticColors.keySet()) {
-                            Bukkit.getScheduler().runTask(HMCCosmeticsPlugin.getInstance(), () -> {
+                            Bukkit.getScheduler().runTask(SummitCosmeticsPlugin.getInstance(), () -> {
                                 // This can not be async.
-                                user.addPlayerCosmetic(cosmetic, cosmeticColors.get(cosmetic));
+                                user.equipCosmetic(cosmetic, cosmeticColors.get(cosmetic));
                             });
                         }
                     }
@@ -57,8 +66,8 @@ public abstract class SQLData extends Data {
                 throw new RuntimeException(e);
             }
         };
-        if (!HMCCosmeticsPlugin.getInstance().isDisabled()) {
-            Bukkit.getScheduler().runTaskAsynchronously(HMCCosmeticsPlugin.getInstance(), run);
+        if (!SummitCosmeticsPlugin.getInstance().isDisabled()) {
+            Bukkit.getScheduler().runTaskAsynchronously(SummitCosmeticsPlugin.getInstance(), run);
         } else {
             run.run();
         }

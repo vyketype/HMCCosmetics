@@ -1,3 +1,35 @@
+# rarities:
+# types:
+# variant_types: GRADIENT, SOLID_COLOUR, CUSTOM_MODEL_ID
+
+
+example_hat:
+  display_name: "Example hat lol"
+  lore:
+    - "i love you"
+    - "testing purposes only"
+  stars: 1
+  rarity: LEGENDARY
+  amount_minted: 1000
+  type: HATS
+  default_attributes:
+    - gradient_tab_colour-rainbow # this is a gradient tab colour attribute as the "rainbow" variant
+  attributes: []
+  variant_type: CUSTOM_MODEL_ID
+  variants:
+    - white: 100 #represents custom model id of the green hat
+    - green: 200
+    - blue: 300
+  default_variant: white
+gradient_tab_colour:
+  display_name: "Tab Colour"
+  lore: []
+  stars: 0
+  rarity: RARE
+  amount_minted: -1
+  type: TAB_COLOURS
+
+
 beanie:
   slot: HELMET
   permission: "hmccosmetics.beanie"

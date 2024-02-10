@@ -1,6 +1,6 @@
 package com.hibiscusmc.hmccosmetics.listener;
 
-import com.hibiscusmc.hmccosmetics.HMCCosmeticsPlugin;
+import com.hibiscusmc.hmccosmetics.SummitCosmeticsPlugin;
 import com.hibiscusmc.hmccosmetics.config.DatabaseSettings;
 import com.hibiscusmc.hmccosmetics.config.Settings;
 import com.hibiscusmc.hmccosmetics.database.Database;
@@ -21,12 +21,12 @@ public class PlayerConnectionListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerJoin(@NotNull PlayerJoinEvent event) {
         if (event.getPlayer().isOp() || event.getPlayer().hasPermission("hmccosmetics.notifyupdate")) {
-            if (!HMCCosmeticsPlugin.getInstance().getLatestVersion().equalsIgnoreCase(HMCCosmeticsPlugin.getInstance().getDescription().getVersion()) && HMCCosmeticsPlugin.getInstance().getLatestVersion().isEmpty())
+            if (!SummitCosmeticsPlugin.getInstance().getLatestVersion().equalsIgnoreCase(SummitCosmeticsPlugin.getInstance().getDescription().getVersion()) && SummitCosmeticsPlugin.getInstance().getLatestVersion().isEmpty())
                 MessagesUtil.sendMessageNoKey(
                         event.getPlayer(),
                         "<br>" +
                                 "<GRAY>There is a new version of <light_purple><Bold>HMCCosmetics<reset><gray> available!<br>" +
-                                "<GRAY>Current version: <red>" + HMCCosmeticsPlugin.getInstance().getDescription().getVersion() + " <GRAY>| Latest version: <light_purple>" + HMCCosmeticsPlugin.getInstance().getLatestVersion() + "<br>" +
+                                "<GRAY>Current version: <red>" + SummitCosmeticsPlugin.getInstance().getDescription().getVersion() + " <GRAY>| Latest version: <light_purple>" + SummitCosmeticsPlugin.getInstance().getLatestVersion() + "<br>" +
                                 "<GRAY>Download it on <gold><click:OPEN_URL:'https://www.spigotmc.org/resources/100107/'>Spigot<reset> <gray>or <gold><click:OPEN_URL:'https://polymart.org/resource/1879'>Polymart<reset><gray>!" +
                                 "<br>"
                 );
@@ -39,7 +39,7 @@ public class PlayerConnectionListener implements Listener {
             MessagesUtil.sendDebugMessages("Run User Join");
 
             // And finally, launch an update for the cosmetics they have.
-            Bukkit.getScheduler().runTaskLater(HMCCosmeticsPlugin.getInstance(), () -> {
+            Bukkit.getScheduler().runTaskLater(SummitCosmeticsPlugin.getInstance(), () -> {
                 if (user.getPlayer() == null) return;
                 user.updateCosmetic();
             }, 4);
@@ -47,7 +47,7 @@ public class PlayerConnectionListener implements Listener {
 
         if (DatabaseSettings.isEnabledDelay()) {
             MessagesUtil.sendDebugMessages("Delay Enabled with " + DatabaseSettings.getDelayLength() + " ticks");
-            Bukkit.getScheduler().runTaskLater(HMCCosmeticsPlugin.getInstance(), run, DatabaseSettings.getDelayLength());
+            Bukkit.getScheduler().runTaskLater(SummitCosmeticsPlugin.getInstance(), run, DatabaseSettings.getDelayLength());
         } else {
             run.run();
         }

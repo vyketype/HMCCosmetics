@@ -1,7 +1,7 @@
 package com.hibiscusmc.hmccosmetics.util;
 
 import com.comphenix.protocol.wrappers.EnumWrappers;
-import com.hibiscusmc.hmccosmetics.HMCCosmeticsPlugin;
+import com.hibiscusmc.hmccosmetics.SummitCosmeticsPlugin;
 import com.hibiscusmc.hmccosmetics.cosmetic.CosmeticSlot;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.EquipmentSlot;
@@ -161,6 +161,6 @@ public class HMCCInventoryUtils {
     }
 
     public static NamespacedKey getCosmeticKey() {
-        return new NamespacedKey(HMCCosmeticsPlugin.getInstance(), "cosmetic");
+        return new NamespacedKey(SummitCosmeticsPlugin.getInstance(), "cosmetic");
     }
 }

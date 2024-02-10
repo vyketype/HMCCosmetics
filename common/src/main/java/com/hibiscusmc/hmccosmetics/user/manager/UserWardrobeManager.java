@@ -1,6 +1,6 @@
 package com.hibiscusmc.hmccosmetics.user.manager;
 
-import com.hibiscusmc.hmccosmetics.HMCCosmeticsPlugin;
+import com.hibiscusmc.hmccosmetics.SummitCosmeticsPlugin;
 import com.hibiscusmc.hmccosmetics.config.Wardrobe;
 import com.hibiscusmc.hmccosmetics.config.WardrobeLocation;
 import com.hibiscusmc.hmccosmetics.config.WardrobeSettings;
@@ -10,8 +10,8 @@ import com.hibiscusmc.hmccosmetics.cosmetic.types.CosmeticBalloonType;
 import com.hibiscusmc.hmccosmetics.gui.Menu;
 import com.hibiscusmc.hmccosmetics.gui.Menus;
 import com.hibiscusmc.hmccosmetics.user.CosmeticUser;
-import com.hibiscusmc.hmccosmetics.util.MessagesUtil;
 import com.hibiscusmc.hmccosmetics.util.HMCCServerUtils;
+import com.hibiscusmc.hmccosmetics.util.MessagesUtil;
 import com.hibiscusmc.hmccosmetics.util.packets.HMCCPacketManager;
 import lombok.Getter;
 import me.lojosho.hibiscuscommons.nms.NMSHandlers;
@@ -117,7 +117,7 @@ public class UserWardrobeManager {
             HMCCPacketManager.sendFakePlayerInfoPacket(player, NPC_ID, WARDROBE_UUID, npcName, viewer);
 
             // NPC 2
-            Bukkit.getScheduler().runTaskLater(HMCCosmeticsPlugin.getInstance(), () -> {
+            Bukkit.getScheduler().runTaskLater(SummitCosmeticsPlugin.getInstance(), () -> {
                 if (!user.isInWardrobe()) return; // If a player exits the wardrobe right away, no need to spawn the NPC
                 HMCCPacketManager.sendFakePlayerSpawnPacket(npcLocation, WARDROBE_UUID, NPC_ID, viewer);
                 HMCCPacketManager.sendPlayerOverlayPacket(NPC_ID, viewer);
@@ -160,7 +160,7 @@ public class UserWardrobeManager {
                 Component message = MessagesUtil.processStringNoKey(WardrobeSettings.getBossbarMessage());
 
                 bossBar = BossBar.bossBar(message, progress, WardrobeSettings.getBossbarColor(), WardrobeSettings.getBossbarOverlay());
-                Audience target = BukkitAudiences.create(HMCCosmeticsPlugin.getInstance()).player(player);
+                Audience target = BukkitAudiences.create(SummitCosmeticsPlugin.getInstance()).player(player);
 
                 target.showBossBar(bossBar);
             }
@@ -184,7 +184,7 @@ public class UserWardrobeManager {
                     WardrobeSettings.getTransitionStay(),
                     WardrobeSettings.getTransitionFadeOut()
             );
-            Bukkit.getScheduler().runTaskLater(HMCCosmeticsPlugin.getInstance(), run, WardrobeSettings.getTransitionDelay());
+            Bukkit.getScheduler().runTaskLater(SummitCosmeticsPlugin.getInstance(), run, WardrobeSettings.getTransitionDelay());
         } else {
             run.run();
         }
@@ -263,7 +263,7 @@ public class UserWardrobeManager {
             HMCCPacketManager.equipmentSlotUpdate(player.getEntityId(), items, viewer);
 
             if (WardrobeSettings.isEnabledBossbar()) {
-                Audience target = BukkitAudiences.create(HMCCosmeticsPlugin.getInstance()).player(player);
+                Audience target = BukkitAudiences.create(SummitCosmeticsPlugin.getInstance()).player(player);
 
                 target.hideBossBar(bossBar);
             }
@@ -332,7 +332,7 @@ public class UserWardrobeManager {
             }
         };
 
-        runnable.runTaskTimer(HMCCosmeticsPlugin.getInstance(), 0, 2);
+        runnable.runTaskTimer(SummitCosmeticsPlugin.getInstance(), 0, 2);
     }
 
     public void setWardrobeStatus(WardrobeStatus status) {

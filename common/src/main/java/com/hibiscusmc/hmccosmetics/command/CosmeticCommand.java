@@ -2,7 +2,7 @@ package com.hibiscusmc.hmccosmetics.command;
 
 import com.hibiscusmc.hmccolor.HMCColorConfig;
 import com.hibiscusmc.hmccolor.HMCColorContextKt;
-import com.hibiscusmc.hmccosmetics.HMCCosmeticsPlugin;
+import com.hibiscusmc.hmccosmetics.SummitCosmeticsPlugin;
 import com.hibiscusmc.hmccosmetics.config.Settings;
 import com.hibiscusmc.hmccosmetics.config.Wardrobe;
 import com.hibiscusmc.hmccosmetics.config.WardrobeLocation;
@@ -18,8 +18,8 @@ import com.hibiscusmc.hmccosmetics.gui.Menus;
 import com.hibiscusmc.hmccosmetics.gui.special.DyeMenu;
 import com.hibiscusmc.hmccosmetics.user.CosmeticUser;
 import com.hibiscusmc.hmccosmetics.user.CosmeticUsers;
-import com.hibiscusmc.hmccosmetics.util.MessagesUtil;
 import com.hibiscusmc.hmccosmetics.util.HMCCServerUtils;
+import com.hibiscusmc.hmccosmetics.util.MessagesUtil;
 import me.lojosho.hibiscuscommons.hooks.Hooks;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
@@ -89,7 +89,7 @@ public class CosmeticCommand implements CommandExecutor {
                     if (!silent) MessagesUtil.sendMessage(sender, "no-permission");
                     return true;
                 }
-                HMCCosmeticsPlugin.setup();
+                SummitCosmeticsPlugin.setup();
                 if (!silent) MessagesUtil.sendMessage(sender, "reloaded");
                 return true;
             }
@@ -152,7 +152,7 @@ public class CosmeticCommand implements CommandExecutor {
 
                 if (!silent) MessagesUtil.sendMessage(player, "equip-cosmetic", placeholders);
 
-                user.addPlayerCosmetic(cosmetic, color);
+                user.equipCosmetic(cosmetic, color);
                 user.updateCosmetic(cosmetic.getSlot());
                 return true;
             }
@@ -315,7 +315,7 @@ public class CosmeticCommand implements CommandExecutor {
                         if (!silent) MessagesUtil.sendMessage(player, "invalid-color");
                         return true;
                     }
-                    user.addPlayerCosmetic(cosmetic, color); // #FFFFFF
+                    user.equipCosmetic(cosmetic, color); // #FFFFFF
                 } else {
                     DyeMenu.openMenu(user, cosmetic);
                 }

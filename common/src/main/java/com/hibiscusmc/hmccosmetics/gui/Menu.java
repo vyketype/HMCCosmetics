@@ -1,6 +1,6 @@
 package com.hibiscusmc.hmccosmetics.gui;
 
-import com.hibiscusmc.hmccosmetics.HMCCosmeticsPlugin;
+import com.hibiscusmc.hmccosmetics.SummitCosmeticsPlugin;
 import com.hibiscusmc.hmccosmetics.api.events.PlayerMenuOpenEvent;
 import com.hibiscusmc.hmccosmetics.config.Settings;
 import com.hibiscusmc.hmccosmetics.cosmetic.Cosmetic;
@@ -22,6 +22,7 @@ import me.lojosho.shaded.configurate.ConfigurationNode;
 import me.lojosho.shaded.configurate.serialize.SerializationException;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
@@ -153,7 +154,7 @@ public class Menu {
             };
 
             if (refreshRate != -1) {
-                taskid.set(Bukkit.getScheduler().scheduleSyncRepeatingTask(HMCCosmeticsPlugin.getInstance(), run, 0, refreshRate));
+                taskid.set(Bukkit.getScheduler().scheduleSyncRepeatingTask(SummitCosmeticsPlugin.getInstance(), run, 0, refreshRate));
             } else {
                 run.run();
             }
@@ -165,11 +166,11 @@ public class Menu {
 
         // API
         PlayerMenuOpenEvent event = new PlayerMenuOpenEvent(user, this);
-        Bukkit.getScheduler().runTask(HMCCosmeticsPlugin.getInstance(), () -> Bukkit.getPluginManager().callEvent(event));
+        Bukkit.getScheduler().runTask(SummitCosmeticsPlugin.getInstance(), () -> Bukkit.getPluginManager().callEvent(event));
         if (event.isCancelled()) return;
         // Internal
 
-        Bukkit.getScheduler().runTask(HMCCosmeticsPlugin.getInstance(), () -> {
+        Bukkit.getScheduler().runTask(SummitCosmeticsPlugin.getInstance(), () -> {
             gui.open(player);
             updateMenu(user, gui); // fixes shading? I know I do this twice but it's easier than writing a whole new class to deal with this shit
         });
@@ -292,6 +293,12 @@ public class Menu {
     public boolean canOpen(Player player) {
         if (permissionNode.isEmpty()) return true;
         return player.isOp() || player.hasPermission(permissionNode);
+    }
+    
+    public static ItemStack getBlackPane() {
+        return new com.hibiscusmc.hmccosmetics.util.ItemBuilder(Material.BLACK_STAINED_GLASS_PANE)
+                .setDisplayName("")
+                .build();
     }
 
     public static Comparator<MenuItem> priorityCompare = Comparator.comparing(MenuItem::priority).reversed();

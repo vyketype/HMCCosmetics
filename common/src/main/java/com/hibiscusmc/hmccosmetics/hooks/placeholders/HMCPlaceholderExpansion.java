@@ -1,6 +1,6 @@
 package com.hibiscusmc.hmccosmetics.hooks.placeholders;
 
-import com.hibiscusmc.hmccosmetics.HMCCosmeticsPlugin;
+import com.hibiscusmc.hmccosmetics.SummitCosmeticsPlugin;
 import com.hibiscusmc.hmccosmetics.cosmetic.Cosmetic;
 import com.hibiscusmc.hmccosmetics.cosmetic.CosmeticSlot;
 import com.hibiscusmc.hmccosmetics.cosmetic.Cosmetics;
@@ -44,7 +44,7 @@ public class HMCPlaceholderExpansion extends PlaceholderExpansion {
     @Override
     @NotNull
     public String getVersion() {
-        return HMCCosmeticsPlugin.getInstance().getDescription().getVersion();
+        return SummitCosmeticsPlugin.getInstance().getDescription().getVersion();
     }
 
     @Override

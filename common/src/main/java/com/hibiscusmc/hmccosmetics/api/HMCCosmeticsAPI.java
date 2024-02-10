@@ -1,6 +1,6 @@
 package com.hibiscusmc.hmccosmetics.api;
 
-import com.hibiscusmc.hmccosmetics.HMCCosmeticsPlugin;
+import com.hibiscusmc.hmccosmetics.SummitCosmeticsPlugin;
 import com.hibiscusmc.hmccosmetics.cosmetic.Cosmetic;
 import com.hibiscusmc.hmccosmetics.cosmetic.CosmeticSlot;
 import com.hibiscusmc.hmccosmetics.cosmetic.Cosmetics;
@@ -69,7 +69,7 @@ public class HMCCosmeticsAPI {
      * @param color Color to apply to cosmetic
      */
     public static void equipCosmetic(@NotNull CosmeticUser user, @NotNull Cosmetic cosmetic, @Nullable Color color) {
-        user.addPlayerCosmetic(cosmetic, color);
+        user.equipCosmetic(cosmetic, color);
     }
 
     /**
@@ -112,6 +112,6 @@ public class HMCCosmeticsAPI {
      */
     @NotNull
     public static String getHMCCVersion() {
-        return HMCCosmeticsPlugin.getInstance().getDescription().getVersion();
+        return SummitCosmeticsPlugin.getInstance().getDescription().getVersion();
     }
 }

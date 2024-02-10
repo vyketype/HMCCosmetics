@@ -1,6 +1,6 @@
 package com.hibiscusmc.hmccosmetics.user.manager;
 
-import com.hibiscusmc.hmccosmetics.HMCCosmeticsPlugin;
+import com.hibiscusmc.hmccosmetics.SummitCosmeticsPlugin;
 import com.hibiscusmc.hmccosmetics.config.Settings;
 import com.hibiscusmc.hmccosmetics.user.CosmeticUser;
 import com.hibiscusmc.hmccosmetics.util.HMCCServerUtils;
@@ -103,7 +103,7 @@ public class UserEmoteModel extends PlayerModel {
     public void stopAnimation() {
         emotePlaying = null;
         despawn();
-        Bukkit.getScheduler().runTask(HMCCosmeticsPlugin.getInstance(), () -> {
+        Bukkit.getScheduler().runTask(SummitCosmeticsPlugin.getInstance(), () -> {
             Player player = user.getPlayer();
             if (player == null) return;
 

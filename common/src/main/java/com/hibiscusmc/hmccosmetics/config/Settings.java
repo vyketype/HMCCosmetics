@@ -1,6 +1,6 @@
 package com.hibiscusmc.hmccosmetics.config;
 
-import com.hibiscusmc.hmccosmetics.HMCCosmeticsPlugin;
+import com.hibiscusmc.hmccosmetics.SummitCosmeticsPlugin;
 import com.hibiscusmc.hmccosmetics.util.MessagesUtil;
 import lombok.Getter;
 import me.lojosho.shaded.configurate.ConfigurationNode;
@@ -167,7 +167,7 @@ public class Settings {
         defaultMenu = source.node(DEFAULT_MENU).getString();
         configVersion = source.node(CONFIG_VERSION).getInt(0);
         if (configVersion == 0) {
-            HMCCosmeticsPlugin plugin = HMCCosmeticsPlugin.getInstance();
+            SummitCosmeticsPlugin plugin = SummitCosmeticsPlugin.getInstance();
             plugin.getLogger().severe("");
             plugin.getLogger().severe("");
             plugin.getLogger().severe("Improper Configuration Found (Config Version Does Not Exist!)");
@@ -277,7 +277,7 @@ public class Settings {
     public static void setDebugMode(boolean newSetting) {
         debugMode = newSetting;
 
-        HMCCosmeticsPlugin plugin = HMCCosmeticsPlugin.getInstance();
+        SummitCosmeticsPlugin plugin = SummitCosmeticsPlugin.getInstance();
 
         plugin.getConfig().set("debug-mode", newSetting);
 

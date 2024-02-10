@@ -99,6 +99,15 @@ allprojects {
         }
         implementation("com.owen1212055:particlehelper:1.0.0-SNAPSHOT")
         implementation("com.ticxo.playeranimator:PlayerAnimator:R1.2.7")
+
+        // stefvanschie/IF --> for custom GUIs
+        implementation("com.github.stefvanschie.inventoryframework:IF:0.10.13")
+
+        // apache commons lang3
+        implementation("org.apache.commons:commons-lang3:3.12.0")
+
+        // pretty time
+        implementation("org.ocpsoft.prettytime:prettytime:5.0.4.Final")
     }
 }
 
@@ -154,10 +163,11 @@ tasks {
 
 
 bukkit {
+    name = "SummitCosmetics" // added by vyketype - do not remove
     load = BukkitPluginDescription.PluginLoadOrder.POSTWORLD
-    main = "com.hibiscusmc.hmccosmetics.HMCCosmeticsPlugin"
+    main = "com.hibiscusmc.hmccosmetics.SummitCosmeticsPlugin"
     apiVersion = "1.18"
-    authors = listOf("LoJoSho")
+    authors = listOf("LoJoSho", "vyketype")
     depend = listOf("HibiscusCommons", "ProtocolLib")
     softDepend = listOf("ModelEngine", "Oraxen", "ItemsAdder", "Geary", "HMCColor", "WorldGuard", "MythicMobs", "PlaceholderAPI", "SuperVanish", "PremiumVanish", "LibsDisguises", "Denizen", "MMOItems", "Eco")
     version = "${project.version}"
@@ -166,6 +176,10 @@ bukkit {
     )
 
     commands {
+        register("backpack") {
+            description = "Opens the cosmetic backpack of a player"
+            usage = "[targetPlayer]"
+        }
         register("cosmetic") {
             description = "Base Cosmetic Command"
             aliases = listOf("hmccosmetics", "cosmetics")

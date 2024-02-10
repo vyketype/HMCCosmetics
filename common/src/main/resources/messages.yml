@@ -3,7 +3,7 @@
 # If you don't wish for a message to be sent, simply make it blank.
 #
 
-prefix: "<gradient:#f368ec:#f39cef>HMCCosmetics <GRAY>»<WHITE>"
+prefix: "<gradient:#f368ec:#f39cef>SummitCosmetics <GRAY>»<WHITE>"
 reloaded: "%prefix% <gradient:#6D9DC5:#45CDE9>Config files reloaded!"
 not-enough-args: "%prefix% <red>Improper amount of arguments"
 no-permission: "%prefix% <red>No Permission!"
@@ -31,10 +31,10 @@ emote-blocked: "%prefix% <red>You can not use your emote here!"
 emote-none: "%prefix% <red>You have no emote equipped!"
 
 invalid-slot: "%prefix% <red>Invalid cosmetic slot!"
-invalid-player: "%prefix% <red>Invalid Player!"
-invalid-menu: "%prefix% <red>Invalid Menu!"
-invalid-cosmetic: "%prefix% <red>Invalid Cosmetic!"
-invalid-color: "%prefix% <red>Invalid Color!"
+invalid-player: "%prefix% <red>Invalid player!"
+invalid-menu: "%prefix% <red>Invalid menu!"
+invalid-cosmetic: "%prefix% <red>Invalid cosmetic!"
+invalid-color: "%prefix% <red>Invalid color!"
 
 debug-enabled: "%prefix% <gradient:#6D9DC5:#45CDE9>Enabled Debug Mode!"
 debug-disabled: "%prefix% <gradient:#6D9DC5:#45CDE9>Disabled Debug Mode!"

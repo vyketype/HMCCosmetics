@@ -1,6 +1,6 @@
 package com.hibiscusmc.hmccosmetics.emotes;
 
-import com.hibiscusmc.hmccosmetics.HMCCosmeticsPlugin;
+import com.hibiscusmc.hmccosmetics.SummitCosmeticsPlugin;
 import com.ticxo.playeranimator.api.PlayerAnimator;
 import com.ticxo.playeranimator.api.animation.pack.AnimationPack;
 import org.apache.commons.io.FilenameUtils;
@@ -29,7 +29,7 @@ public class EmoteManager {
         emotes.clear();
 
         // Get the emote directory and check if it exists
-        File emoteDir = new File(HMCCosmeticsPlugin.getInstance().getDataFolder().getPath() + "/emotes/");
+        File emoteDir = new File(SummitCosmeticsPlugin.getInstance().getDataFolder().getPath() + "/emotes/");
         if (!emoteDir.exists()) return;
 
         // Get all the files inside the directory and check if it isn't 0

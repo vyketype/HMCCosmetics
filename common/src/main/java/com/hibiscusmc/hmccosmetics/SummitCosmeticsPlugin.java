@@ -2,6 +2,7 @@ package com.hibiscusmc.hmccosmetics;
 
 import com.hibiscusmc.hmccosmetics.api.HMCCosmeticsAPI;
 import com.hibiscusmc.hmccosmetics.api.events.HMCCosmeticSetupEvent;
+import com.hibiscusmc.hmccosmetics.command.BackpackCommand;
 import com.hibiscusmc.hmccosmetics.command.CosmeticCommand;
 import com.hibiscusmc.hmccosmetics.command.CosmeticCommandTabComplete;
 import com.hibiscusmc.hmccosmetics.config.DatabaseSettings;
@@ -43,12 +44,12 @@ import org.bukkit.permissions.Permission;
 import java.io.File;
 import java.nio.file.Path;
 
-public final class HMCCosmeticsPlugin extends HibiscusPlugin {
+public final class SummitCosmeticsPlugin extends HibiscusPlugin {
 
-    private static HMCCosmeticsPlugin instance;
+    private static SummitCosmeticsPlugin instance;
     private static YamlConfigurationLoader configLoader;
 
-    public HMCCosmeticsPlugin() {
+    public SummitCosmeticsPlugin() {
         super(13873, 1879);
         new HookHMCCosmetics();
     }
@@ -94,7 +95,9 @@ public final class HMCCosmeticsPlugin extends HibiscusPlugin {
         // Commands
         getServer().getPluginCommand("cosmetic").setExecutor(new CosmeticCommand());
         getServer().getPluginCommand("cosmetic").setTabCompleter(new CosmeticCommandTabComplete());
-
+        
+        getServer().getPluginCommand("backpack").setExecutor(new BackpackCommand());
+        
         // Listener
         getServer().getPluginManager().registerEvents(new PlayerConnectionListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerGameListener(), this);
@@ -135,7 +138,7 @@ public final class HMCCosmeticsPlugin extends HibiscusPlugin {
         }
     }
 
-    public static HMCCosmeticsPlugin getInstance() {
+    public static SummitCosmeticsPlugin getInstance() {
         return instance;
     }
 
